@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-deployment
+spec:
+  selector:
+    matchLabels:
+      app: zslb-master
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      initContainers:
+      - image: alpine:3.9
+        name: war
+        command: ["cp", "/server", "/go/bin"]
+        volumeMounts:
+        - mountPath: /go/bin
+          name: app-volume
+      containers:
+      - image: alpine:3.9
+        name: tomcat
+        command: ["sh","-c","/go/bin/server"]
+        volumeMounts:
+        - mountPath: /go/bin
+          name: app-volume
+        ports:
+        - containerPort: 8001
+          hostPort: 8001 
+      volumes:
+      - name: app-volume
+        hostPath:
+          path: /Users/wiwen/work/code/eecdn-mod/zslb-master
+  

@@ -1,0 +1,29 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: networks.samplecrd.k8s.io
+spec:
+  group: samplecrd.k8s.io
+  version: v1
+  names:
+    kind: Network
+    # 复数
+    plural: networks
+  # scope 是 Namespaced，即：我们定义的这个 Namespace对象，类似于POD
+  scope: Namespaced
+# tree $GOPATH/src/github.com/<your-name>/k8s-controller-custom-resource
+# .
+# ├── controller.go
+# ├── crd
+# │   └── network.yaml
+# ├── example
+# │   └── example-network.yaml
+# ├── main.go
+# └── pkg
+#     └── apis
+#         └── samplecrd
+#             ├── register.go
+#             └── v1
+#                 ├── doc.go
+#                 ├── register.go
+#                 └── types.go
