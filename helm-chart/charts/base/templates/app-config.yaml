@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-config
+  labels:
+{{ include "base.labels" . | indent 4 }}
+data:
+{{ (.Files.Glob "config.*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-env
+  labels:
+{{ include "base.labels" . | indent 4 }}
+data:
+{{ .Files.Get "env.yaml" | indent 2 }}

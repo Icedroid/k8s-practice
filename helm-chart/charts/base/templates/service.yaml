@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "base.fullname" . }}
+  labels:
+{{ include "base.labels" . | indent 4 }}
+spec:
+  type: NodePort 
+  ports:
+    {{- if eq (include "base.group" .) "eecdn" }}
+    - port: 8001 
+      targetPort: 8001
+      protocol: TCP
+      name: http
+    {{- if .Values.enable8002 }}
+    - port: 8002
+      targetPort: 8002
+      protocol: TCP
+      name: http-8002
+    {{- end }}
+    {{- else }}
+    - port: 8081
+      targetPort: 8081
+      protocol: TCP
+      name: grpc
+    - port: 8082
+      targetPort: 8082
+      protocol: TCP
+      name: http
+    {{- end }}
+  selector:
+    app.kubernetes.io/name: {{ include "base.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
