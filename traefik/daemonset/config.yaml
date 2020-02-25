@@ -1,0 +1,66 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: traefik-config
+data:
+  traefik.yaml: |-
+    serversTransport:
+      insecureSkipVerify: true
+    api:
+      insecure: true
+      dashboard: true
+      debug: true
+    ping:
+      entryPoint: traefik
+    metrics:
+      prometheus: ""
+    entryPoints:
+      web:
+        address: ":80"
+      websecure:
+        address: ":443"
+      mongo:
+        address: ":27017"
+      postgres:
+        address: ":5432"
+      mysql:
+        address: ":3306"
+    providers:
+      kubernetesIngress: ""
+      kubernetesCRD: ""
+    log:
+      filePath: ""
+      level: error
+      format: json
+    accessLog:
+      filePath: ""
+      format: json
+      bufferingSize: 0
+      filters:
+        retryAttempts: true
+        minDuration: 20
+      fields:
+        defaultMode: keep
+        names:
+          ClientUsername: drop
+        headers:
+          defaultMode: keep
+          names:
+            User-Agent: redact
+            Authorization: keep
+            Content-Type: keep     
+    # certificatesResolvers:
+    #   ali:
+    #     acme:
+    #       # 邮箱配置
+    #       email: shenggxhz@qq.com
+    #       # 下面是用于测试的ca服务，如果https证书生成成功了，则移除下面参数
+    #       caServer: https://acme-staging-v02.api.letsencrypt.org/directory   
+    #       storage: /etc/acme/acme.json
+    #       # 使用 dns 验证方式
+    #       dnsChallenge:
+    #         provider: alidns
+    #         delayBeforeCheck: 30
+    #       # httpChallenge:
+    #       #   entryPoint: foobar
+    #       # tlsChallenge: {}
